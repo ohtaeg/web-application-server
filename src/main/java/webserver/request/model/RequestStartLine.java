@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.request.model;
 
 import webserver.exception.EmptyHttpRequestException;
 import webserver.exception.EmptyHttpRequestResourceException;
@@ -12,33 +12,24 @@ public class RequestStartLine {
     private static final int HTTP_VERSION_INDEX = 2;
 
     private final String method;
-    private final String resource;
+    private final Resource resource;
     private final String httpVersion;
 
     private RequestStartLine(final String method, final String resource, final String httpVersion) {
         this.method = method;
-        this.resource = resource;
+        this.resource = Resource.parse(resource);
         this.httpVersion = httpVersion;
     }
 
-    protected static RequestStartLine of(final String value) {
+    public static RequestStartLine of(final String value) {
         final String[] startLine = parse(value);
         validResource(startLine.length);
         return new RequestStartLine(startLine[HTTP_METHOD_INDEX], startLine[REQUEST_RESOURCE_INDEX], startLine[HTTP_VERSION_INDEX]);
     }
 
-    boolean hasResource() {
-        return resource.startsWith("/") && resource.length() > 1;
-    }
-
-    String getResource() {
-        return resource;
-    }
-
-    private static void validResource(final int length) {
-        if (length != 3) {
-            throw new EmptyHttpRequestResourceException();
-        }
+    private static String[] parse(final String startLine) {
+        validEmpty(startLine);
+        return startLine.split(DELIMITER);
     }
 
     private static void validEmpty(final String value) {
@@ -47,9 +38,22 @@ public class RequestStartLine {
         }
     }
 
-    private static String[] parse(final String startLine) {
-        validEmpty(startLine);
-        return startLine.split(DELIMITER);
+    private static void validResource(final int length) {
+        if (length != 3) {
+            throw new EmptyHttpRequestResourceException();
+        }
+    }
+
+    public String getHttpMethod() {
+        return method;
+    }
+
+    public String getRequestUri() {
+        return resource.getPath();
+    }
+
+    public String getParameter(final String key) {
+        return resource.getParameter(key);
     }
 
     @Override

@@ -6,6 +6,9 @@ import java.nio.file.Files;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import webserver.controller.Controller;
+import webserver.request.model.RequestMapper;
+import webserver.request.model.RequestStartLine;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -25,10 +28,15 @@ public class RequestHandler extends Thread {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             RequestStartLine requestStartLine = RequestStartLine.of(bufferedReader.readLine());
+            RequestMapper requestMapper = new RequestMapper();
 
-            byte[] body = "Hello World".getBytes();
-            if (requestStartLine.hasResource()) {
-                body = Files.readAllBytes(new File("./webapp" + requestStartLine.getResource()).toPath());
+            final String uri = requestStartLine.getRequestUri();
+            final Controller controller = requestMapper.getController(uri);
+            final String action = controller.handleRequest(requestStartLine);
+
+            byte[] body = action.getBytes();
+            if (action.contains(".")) {
+                body = Files.readAllBytes(new File("./webapp" + action).toPath());
             }
 
             response200Header(dos, body.length);
