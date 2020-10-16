@@ -1,0 +1,7 @@
+###
+POST localhost:8080/user/create
+Content-Type: application/x-www-form-urlencoded
+
+userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com
+
+###

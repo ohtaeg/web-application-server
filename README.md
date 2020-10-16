@@ -20,10 +20,27 @@
 ### 요구사항 2 - get 방식으로 회원가입
 - url 패턴을 분석
     - [scheme] :// [host:port] / [path] ? [queryString]
+- http Header의 uri와 쿼리스트링 파싱
 - 서블릿이 이뤄지는 동작 유추해보기
 ### 요구사항 3 - post 방식으로 회원가입
-* 
+- http body 파싱
+- http RFC 표준 구조로 리팩토링
+```
+Request {
+  RequestLine {
+    Method
+    RequestUri
+    HttpVersion 
+  }
+  Headers {
+    GeneralHeader
+    RequestHeader
+    EntityHeader
+  }
 
+  MessageBody
+}
+```
 ### 요구사항 4 - redirect 방식으로 이동
 * 
 
