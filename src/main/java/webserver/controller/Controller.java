@@ -1,8 +1,8 @@
 package webserver.controller;
 
-import webserver.request.model.RequestStartLine;
+import webserver.http.request.HttpRequest;
 
 @FunctionalInterface
 public interface Controller {
-    String handleRequest(RequestStartLine request);
+    String handleRequest(HttpRequest request);
 }

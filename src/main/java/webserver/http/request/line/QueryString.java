@@ -1,8 +1,7 @@
-package webserver.request.model;
+package webserver.http.request.line;
 
 import util.HttpRequestUtils;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;

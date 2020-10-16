@@ -1,4 +1,4 @@
-package webserver.request.model;
+package webserver.http.request;
 
 import webserver.controller.Controller;
 import webserver.controller.UserController;
@@ -12,6 +12,7 @@ public class RequestMapper {
     static {
         mappings = new HashMap<>();
         mappings.put("/index.html", (requestStartLine) -> "/index.html");
+        mappings.put("/user/form.html", (requestStartLine) -> "/user/form.html");
         mappings.put("/user/create", new UserController());
     }
 

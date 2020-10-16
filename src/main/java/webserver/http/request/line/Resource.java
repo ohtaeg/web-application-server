@@ -1,4 +1,4 @@
-package webserver.request.model;
+package webserver.http.request.line;
 
 import webserver.exception.IllegalURIException;
 

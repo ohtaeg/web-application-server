@@ -1,11 +1,11 @@
-package webserver.request.model;
+package webserver.http.request.line;
 
 import webserver.exception.EmptyHttpRequestException;
 import webserver.exception.EmptyHttpRequestResourceException;
 
 import java.util.Objects;
 
-public class RequestStartLine {
+public class RequestLine {
     private static final String DELIMITER = " ";
     private static final int HTTP_METHOD_INDEX = 0;
     private static final int REQUEST_RESOURCE_INDEX = 1;
@@ -15,16 +15,16 @@ public class RequestStartLine {
     private final Resource resource;
     private final String httpVersion;
 
-    private RequestStartLine(final String method, final String resource, final String httpVersion) {
+    private RequestLine(final String method, final String resource, final String httpVersion) {
         this.method = method;
         this.resource = Resource.parse(resource);
         this.httpVersion = httpVersion;
     }
 
-    public static RequestStartLine of(final String value) {
+    public static RequestLine of(final String value) {
         final String[] startLine = parse(value);
         validResource(startLine.length);
-        return new RequestStartLine(startLine[HTTP_METHOD_INDEX], startLine[REQUEST_RESOURCE_INDEX], startLine[HTTP_VERSION_INDEX]);
+        return new RequestLine(startLine[HTTP_METHOD_INDEX], startLine[REQUEST_RESOURCE_INDEX], startLine[HTTP_VERSION_INDEX]);
     }
 
     private static String[] parse(final String startLine) {
@@ -44,8 +44,8 @@ public class RequestStartLine {
         }
     }
 
-    public String getHttpMethod() {
-        return method;
+    public boolean isMatchMethod(final String method) {
+        return this.method.equals(method);
     }
 
     public String getRequestUri() {
@@ -60,7 +60,7 @@ public class RequestStartLine {
     public boolean equals(final Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        final RequestStartLine that = (RequestStartLine) o;
+        final RequestLine that = (RequestLine) o;
         return Objects.equals(method, that.method) &&
                 Objects.equals(resource, that.resource) &&
                 Objects.equals(httpVersion, that.httpVersion);
