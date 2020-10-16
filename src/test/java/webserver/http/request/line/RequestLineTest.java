@@ -1,4 +1,4 @@
-package webserver.request;
+package webserver.http.request.line;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,21 +7,21 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import webserver.exception.EmptyHttpRequestException;
 import webserver.exception.EmptyHttpRequestResourceException;
-import webserver.request.model.RequestStartLine;
+import webserver.http.request.line.RequestLine;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class RequestStartLineTest {
+class RequestLineTest {
     private String requestStartLine = "GET /index.html HTTP1.1";
 
     @DisplayName("요청 시작줄 객체를 생성할 수 있다.")
     @Test
     void create() {
-        RequestStartLine expect = RequestStartLine.of(requestStartLine);
+        RequestLine expect = RequestLine.of(requestStartLine);
 
-        RequestStartLine actual = RequestStartLine.of(requestStartLine);
+        RequestLine actual = RequestLine.of(requestStartLine);
 
         assertThat(actual).isEqualTo(expect);
     }
@@ -30,7 +30,7 @@ class RequestStartLineTest {
     @Test
     void throwException_empty() {
         assertThatExceptionOfType(EmptyHttpRequestException.class).isThrownBy(
-                () -> RequestStartLine.of(null)
+                () -> RequestLine.of(null)
         );
     }
 
@@ -38,19 +38,19 @@ class RequestStartLineTest {
     @Test
     void throwException_emptyResource() {
         assertThatExceptionOfType(EmptyHttpRequestResourceException.class).isThrownBy(
-                () -> RequestStartLine.of("GET HTTP1.1")
+                () -> RequestLine.of("GET HTTP1.1")
         );
     }
 
     @DisplayName("Http Method를 가지고 올 수 있다.")
     @Test
     void getHttpMethod() {
-        RequestStartLine request = RequestStartLine.of(requestStartLine);
+        RequestLine request = RequestLine.of(requestStartLine);
         final String expect = "GET";
 
-        final String httpMethod = request.getHttpMethod();
+        final boolean httpMethod = request.isMatchMethod(expect);
 
-        assertThat(httpMethod).isEqualTo(expect);
+        assertThat(httpMethod).isTrue();
     }
 
     @DisplayName("요청 URI를 가지고 올 수 있다.")
@@ -60,7 +60,7 @@ class RequestStartLineTest {
             , "GET /user/create HTTP1.1,/user/create"
     })
     void getRequestUri(String uri, String expect) {
-        RequestStartLine request = RequestStartLine.of(uri);
+        RequestLine request = RequestLine.of(uri);
 
         final String path = request.getRequestUri();
 
@@ -73,7 +73,7 @@ class RequestStartLineTest {
             "GET /user/create?userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com HTTP1.1"
     })
     void getParameter(String uri) {
-        RequestStartLine request = RequestStartLine.of(uri);
+        RequestLine request = RequestLine.of(uri);
 
         final String userId = request.getParameter("userId");
         final String password = request.getParameter("password");
