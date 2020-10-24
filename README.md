@@ -22,6 +22,7 @@
     - [scheme] :// [host:port] / [path] ? [queryString]
 - http Header의 uri와 쿼리스트링 파싱
 - 서블릿이 이뤄지는 동작 유추해보기
+
 ### 요구사항 3 - post 방식으로 회원가입
 - http body 파싱
 - http RFC 표준 구조로 리팩토링
@@ -33,22 +34,42 @@ Request {
     HttpVersion 
   }
   Headers {
-    GeneralHeader
-    RequestHeader
-    EntityHeader
+    General Header
+    Request Header
+    Entity Header
+  }
+
+  MessageBody
+}
+
+Response {
+  StatusLine {
+    HttpVersion
+    HttpMethod Status
+    HttpMethod Reason 
+  }
+
+  Headers {
+    General Header
+    Response Header
+    Entity Header
   }
 
   MessageBody
 }
 ```
-### 요구사항 4 - redirect 방식으로 이동
-* 
 
+### 요구사항 4 - redirect 방식으로 이동
+- Http Status 설계
+- Http Response 표준 설계
+- Q.
+    - 핸들링은 어떻게 해야할까?
+    - forward 와 sendRedirect 차이와 상태 코드 처리
 ### 요구사항 5 - cookie
 * 
 
 ### 요구사항 6 - stylesheet 적용
 * 
 
-### heroku 서버에 배포 후
+### 요구사항 7 - css, js 파일 적용
 * 
