@@ -4,7 +4,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.http.request.line.Resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -25,7 +24,7 @@ class ResourceTest {
     @DisplayName("해당 uri가 root일 경우 성공한다.")
     @Test
     void root() {
-        final String expect = "/index.html";
+        final String expect = "/";
 
         Resource actual = Resource.parse("/");
 

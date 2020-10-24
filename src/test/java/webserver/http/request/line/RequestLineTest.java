@@ -5,16 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
-import webserver.exception.EmptyHttpRequestException;
-import webserver.exception.EmptyHttpRequestResourceException;
-import webserver.http.request.line.RequestLine;
+import webserver.http.exception.EmptyHttpRequestException;
+import webserver.http.exception.EmptyHttpRequestResourceException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 class RequestLineTest {
-    private String requestStartLine = "GET /index.html HTTP1.1";
+    private final String requestStartLine = "GET /index.html HTTP/1.1";
 
     @DisplayName("요청 시작줄 객체를 생성할 수 있다.")
     @Test
@@ -38,7 +37,7 @@ class RequestLineTest {
     @Test
     void throwException_emptyResource() {
         assertThatExceptionOfType(EmptyHttpRequestResourceException.class).isThrownBy(
-                () -> RequestLine.of("GET HTTP1.1")
+                () -> RequestLine.of("GET HTTP/1.1")
         );
     }
 
@@ -56,8 +55,8 @@ class RequestLineTest {
     @DisplayName("요청 URI를 가지고 올 수 있다.")
     @ParameterizedTest
     @CsvSource({
-            "GET /index.html HTTP1.1,/index.html"
-            , "GET /user/create HTTP1.1,/user/create"
+            "GET /index.html HTTP/1.1,/index.html"
+            , "GET /user/create HTTP/1.1,/user/create"
     })
     void getRequestUri(String uri, String expect) {
         RequestLine request = RequestLine.of(uri);
@@ -70,7 +69,7 @@ class RequestLineTest {
     @DisplayName("요청한 쿼리스트링 데이터를 가지고 올 수 있다.")
     @ParameterizedTest
     @ValueSource(strings = {
-            "GET /user/create?userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com HTTP1.1"
+            "GET /user/create?userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com HTTP/1.1"
     })
     void getParameter(String uri) {
         RequestLine request = RequestLine.of(uri);
