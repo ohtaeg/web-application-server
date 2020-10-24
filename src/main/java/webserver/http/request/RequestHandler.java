@@ -13,7 +13,8 @@ import util.IOUtils;
 import webserver.controller.Controller;
 import webserver.http.request.header.RequestHeaders;
 import webserver.http.request.line.RequestLine;
-import webserver.http.request.messagebody.MessageBody;
+import webserver.http.common.messagebody.MessageBody;
+import webserver.http.response.HttpResponse;
 
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
@@ -35,19 +36,17 @@ public class RequestHandler extends Thread {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
 
             HttpRequest httpRequest = createHttpRequest(bufferedReader);
+            HttpResponse httpResponse = new HttpResponse(dos, httpRequest);
             RequestMapper requestMapper = new RequestMapper();
 
             final String uri = httpRequest.getRequestUri();
             final Controller controller = requestMapper.getController(uri);
-            final String action = controller.handleRequest(httpRequest);
 
-            byte[] body = action.getBytes();
-            if (action.contains(".")) {
-                body = Files.readAllBytes(new File("./webapp" + action).toPath());
+            if (controller == null) {
+                httpResponse.forward(httpRequest, httpRequest.getRequestUri());
+            } else {
+                controller.handleRequest(httpRequest, httpResponse);
             }
-
-            response200Header(dos, body.length);
-            responseBody(dos, body);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -55,6 +54,7 @@ public class RequestHandler extends Thread {
 
     private HttpRequest createHttpRequest(final BufferedReader bufferedReader) throws IOException {
         final String requestStartLine = bufferedReader.readLine();
+        System.out.println(requestStartLine);
         RequestLine requestLine = RequestLine.of(requestStartLine);
         RequestHeaders requestHeaders = readRequestHeaders(bufferedReader);
         MessageBody messageBody = null;
@@ -87,28 +87,7 @@ public class RequestHandler extends Thread {
     }
 
     private MessageBody readRequestBody(final BufferedReader bufferedReader, final int contentLength) throws IOException {
-        Map<String, String> body = new HashMap<>();
         String message = IOUtils.readData(bufferedReader, contentLength);
         return new MessageBody(HttpRequestUtils.parseQueryString(message));
-    }
-
-    private void response200Header(DataOutputStream dos, int lengthOfBodyContent) {
-        try {
-            dos.writeBytes("HTTP/1.1 200 OK \r\n");
-            dos.writeBytes("Content-Type: text/html;charset=utf-8\r\n");
-            dos.writeBytes("Content-Length: " + lengthOfBodyContent + "\r\n");
-            dos.writeBytes("\r\n");
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
-    }
-
-    private void responseBody(DataOutputStream dos, byte[] body) {
-        try {
-            dos.write(body, 0, body.length);
-            dos.flush();
-        } catch (IOException e) {
-            log.error(e.getMessage());
-        }
     }
 }

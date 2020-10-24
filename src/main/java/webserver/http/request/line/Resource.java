@@ -1,13 +1,11 @@
 package webserver.http.request.line;
 
-import webserver.exception.IllegalURIException;
+import webserver.http.exception.IllegalURIException;
 
 import java.util.Objects;
 
 public class Resource {
     // private static final Pattern PATH_PATTERN = Pattern.compile("^([^?#]*)(\\?([^#]*))?(#(.*))?");
-    private static final String ROOT = "/";
-    private static final String INDEX_PAGE = "/index.html";
     private static final String PATH_QUERY_DELIMITER = "?";
     private static final int DONT_SEPARATED = -1;
 
@@ -23,10 +21,6 @@ public class Resource {
     public static Resource parse(String requestUriPath) {
         valid(requestUriPath);
 
-        if (isRoot(requestUriPath)) {
-            return new Resource(INDEX_PAGE, QueryString.empty());
-        }
-
         int index = requestUriPath.indexOf(PATH_QUERY_DELIMITER);
         if (index == DONT_SEPARATED) {
             return new Resource(requestUriPath, QueryString.empty());
@@ -39,10 +33,6 @@ public class Resource {
         if (requestUriPath == null || requestUriPath.trim().isEmpty()) {
             throw new IllegalURIException();
         }
-    }
-
-    private static boolean isRoot(final String requestUriPath) {
-        return ROOT.equals(requestUriPath);
     }
 
     public String getPath() {

@@ -1,6 +1,8 @@
 package webserver.http.request;
 
 import webserver.controller.Controller;
+import webserver.controller.CreateUserController;
+import webserver.controller.IndexController;
 import webserver.controller.UserController;
 
 import java.util.HashMap;
@@ -11,9 +13,10 @@ public class RequestMapper {
 
     static {
         mappings = new HashMap<>();
-        mappings.put("/index.html", (requestStartLine) -> "/index.html");
-        mappings.put("/user/form.html", (requestStartLine) -> "/user/form.html");
-        mappings.put("/user/create", new UserController());
+        mappings.put("/", new IndexController());
+        mappings.put("/index.html", new IndexController());
+        mappings.put("/user/form.html", new UserController());
+        mappings.put("/user/create", new CreateUserController());
     }
 
     public Controller getController(String path){

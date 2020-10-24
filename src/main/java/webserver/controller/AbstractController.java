@@ -1,18 +1,19 @@
 package webserver.controller;
 
 import webserver.http.request.HttpRequest;
+import webserver.http.response.HttpResponse;
 
 public abstract class AbstractController implements Controller {
     @Override
-    public String handleRequest(final HttpRequest request) {
+    public void handleRequest(final HttpRequest request, final HttpResponse response) {
         if (request.isMatchMethod("GET")) {
-            return doGet(request);
+            doGet(request, response);
         } else {
-            return doPost(request);
+            doPost(request, response);
         }
     }
 
-    abstract String doGet(final HttpRequest request);
+    abstract void doGet(final HttpRequest request, final HttpResponse response);
 
-    abstract String doPost(final HttpRequest request);
+    abstract void doPost(final HttpRequest request, final HttpResponse response);
 }

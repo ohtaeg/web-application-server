@@ -19,4 +19,8 @@ public class RequestHeaders {
     public int getContentLength() {
         return Integer.parseInt(headers.get(HEADER_CONTENT_LENGTH_ATTRIBUTE));
     }
+
+    public String getValue(final String key) {
+        return headers.get(key);
+    }
 }
