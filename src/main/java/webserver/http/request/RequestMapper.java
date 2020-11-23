@@ -4,6 +4,7 @@ import webserver.controller.Controller;
 import webserver.controller.resource.ResourceController;
 import webserver.controller.user.UserCreateController;
 import webserver.controller.resource.IndexController;
+import webserver.controller.user.UserListController;
 import webserver.controller.user.UserLoginController;
 
 import java.util.HashMap;
@@ -15,8 +16,9 @@ public class RequestMapper {
     static {
         mappings = new HashMap<>();
         mappings.put("/", new IndexController());
-        mappings.put("/user/login", new UserLoginController());
         mappings.put("/user/create", new UserCreateController());
+        mappings.put("/user/login", new UserLoginController());
+        mappings.put("/user/list", new UserListController());
     }
 
     public Controller getController(String path){

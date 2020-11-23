@@ -2,6 +2,7 @@ package webserver.http.request;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,10 @@ public class RequestHandler extends Thread {
     }
 
     public void run() {
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
+        try (InputStream in = connection.getInputStream();
+             OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
 
             HttpRequest httpRequest = createHttpRequest(bufferedReader);
             HttpResponse httpResponse = new HttpResponse(dos, httpRequest);
@@ -46,6 +48,7 @@ public class RequestHandler extends Thread {
 
     private HttpRequest createHttpRequest(final BufferedReader bufferedReader) throws IOException {
         final String requestStartLine = bufferedReader.readLine();
+        log.debug(requestStartLine);
         RequestLine requestLine = RequestLine.of(requestStartLine);
         RequestHeaders requestHeaders = readRequestHeaders(bufferedReader);
         MessageBody messageBody = null;

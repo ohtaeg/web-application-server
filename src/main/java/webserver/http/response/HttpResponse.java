@@ -30,10 +30,10 @@ public class HttpResponse {
 
     public void setCookie(final boolean isCookie) {
         if (isCookie) {
-            headers.put("Set-Cookie", "logined=true");
+            headers.put("Set-Cookie", "logined=true; Path=/");
             return;
         }
-        headers.put("Set-Cookie", "logined=false");
+        headers.put("Set-Cookie", "logined=false; Path=/");
     }
 
     public void forward(final HttpRequest request, final String path) {
@@ -42,11 +42,21 @@ public class HttpResponse {
             body = Files.readAllBytes(new File("./webapp" + path).toPath());
             headers.put("Content-Type", getHeaderContentType(request));
             headers.put("Content-Length", String.valueOf(body.length));
+            line.setStatus(HttpStatus.OK);
             responseHeader();
             responseBody(body);
         } catch (IOException e) {
             log.error(e.getMessage());
         }
+    }
+
+    public void forwardBody(final HttpRequest request, final String body) {
+        final byte[] contents = body.getBytes();
+        headers.put("Content-Type", getHeaderContentType(request));
+        headers.put("Content-Length", String.valueOf(contents.length));
+        line.setStatus(HttpStatus.OK);
+        responseHeader();
+        responseBody(contents);
     }
 
     public void sendRedirect(String path) {
@@ -77,6 +87,6 @@ public class HttpResponse {
     }
 
     private String getHeaderContentType(HttpRequest request) {
-        return request.getHeader("Accept").split(",")[0];
+        return request.getHeader("Accept").split(",")[0] + ";charset=utf-8";
     }
 }

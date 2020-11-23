@@ -1,6 +1,7 @@
 package webserver.http.request;
 
 import webserver.http.common.model.HttpVersion;
+import webserver.http.cookie.Cookie;
 import webserver.http.request.header.RequestHeaders;
 import webserver.http.request.line.RequestLine;
 import webserver.http.common.messagebody.MessageBody;
@@ -39,6 +40,10 @@ public class HttpRequest {
 
     public String getHeader(final String key) {
         return requestHeaders.getValue(key);
+    }
+
+    public Cookie getCookie() {
+        return requestHeaders.getCookie();
     }
 
     public static class Builder {

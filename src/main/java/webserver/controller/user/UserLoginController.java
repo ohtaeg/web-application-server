@@ -24,6 +24,7 @@ public class UserLoginController extends AbstractController {
         if (user == null || !password.equals(user.getPassword())) {
             response.setCookie(false);
             response.sendRedirect("/user/login_failed.html");
+            return;
         }
 
         response.setCookie(true);
