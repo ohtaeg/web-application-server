@@ -5,7 +5,6 @@ import webserver.http.exception.IllegalURIException;
 import java.util.Objects;
 
 public class Resource {
-    // private static final Pattern PATH_PATTERN = Pattern.compile("^([^?#]*)(\\?([^#]*))?(#(.*))?");
     private static final String PATH_QUERY_DELIMITER = "?";
     private static final int DONT_SEPARATED = -1;
 
@@ -17,7 +16,6 @@ public class Resource {
         this.queryString = queryString;
     }
 
-    // TODO : /user/create? 로 넘어올 경우 유효성 검사 추가해줄 것
     public static Resource parse(String requestUriPath) {
         valid(requestUriPath);
 

@@ -14,7 +14,7 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class UserControllerTest {
+class UserLoginControllerTest {
     private final String getUrl = "GET /user/create?userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com HTTP1.1";
     private final String postUrl = "POST /user/create HTTP1.1";
     private final String bodyOfPostUrl = "userId=ohtaeg&password=ohtaeg&name=tae&email=otk1090@naver.com";

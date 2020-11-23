@@ -28,9 +28,6 @@ public class RequestHandler extends Thread {
     }
 
     public void run() {
-        log.debug("New Client Connect! Connected IP : {}, Port : {}", connection.getInetAddress(),
-                connection.getPort());
-
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             DataOutputStream dos = new DataOutputStream(out);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
@@ -39,14 +36,9 @@ public class RequestHandler extends Thread {
             HttpResponse httpResponse = new HttpResponse(dos, httpRequest);
             RequestMapper requestMapper = new RequestMapper();
 
-            final String uri = httpRequest.getRequestUri();
-            final Controller controller = requestMapper.getController(uri);
+            final Controller controller = requestMapper.getController(httpRequest.getRequestUri());
+            controller.handleRequest(httpRequest, httpResponse);
 
-            if (controller == null) {
-                httpResponse.forward(httpRequest, httpRequest.getRequestUri());
-            } else {
-                controller.handleRequest(httpRequest, httpResponse);
-            }
         } catch (IOException e) {
             log.error(e.getMessage());
         }
@@ -54,7 +46,6 @@ public class RequestHandler extends Thread {
 
     private HttpRequest createHttpRequest(final BufferedReader bufferedReader) throws IOException {
         final String requestStartLine = bufferedReader.readLine();
-        System.out.println(requestStartLine);
         RequestLine requestLine = RequestLine.of(requestStartLine);
         RequestHeaders requestHeaders = readRequestHeaders(bufferedReader);
         MessageBody messageBody = null;

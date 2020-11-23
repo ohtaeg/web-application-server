@@ -8,7 +8,6 @@ import java.util.Objects;
 
 public class RequestLine {
     private static final String DELIMITER = " ";
-
     private static final int HTTP_METHOD_INDEX = 0;
     private static final int REQUEST_RESOURCE_INDEX = 1;
     private static final int HTTP_VERSION_INDEX = 2;

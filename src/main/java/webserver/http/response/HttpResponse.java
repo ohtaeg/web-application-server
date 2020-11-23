@@ -28,6 +28,14 @@ public class HttpResponse {
         this.headers = new ResponseHeaders(new HashMap<>());
     }
 
+    public void setCookie(final boolean isCookie) {
+        if (isCookie) {
+            headers.put("Set-Cookie", "logined=true");
+            return;
+        }
+        headers.put("Set-Cookie", "logined=false");
+    }
+
     public void forward(final HttpRequest request, final String path) {
         final byte[] body;
         try {
